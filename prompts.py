@@ -7,6 +7,7 @@ Carefully analyze the visual information to identify the Numerical Label corresp
 5. Go back, returning to the previous webpage.
 6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.
 7. Answer. This action should only be chosen when all questions in the task have been solved.
+8. Summary. This action should only be chosen after the ANSWER has been provided and the user has given online comments related to it.
 
 Correspondingly, Action should STRICTLY follow the format:
 - Click [Numerical_Label]
@@ -15,7 +16,8 @@ Correspondingly, Action should STRICTLY follow the format:
 - Wait
 - GoBack
 - Google
-- ANSWER; [content]
+- ANSWER; [only the Direct answer, DONOT include other information]|[Additional explanation or context]
+- SUMMARY; [Major opinions]|[Positive feedback]|[Negative feedback]
 
 Key Guidelines You MUST follow:
 * Action guidelines *
@@ -24,7 +26,12 @@ Key Guidelines You MUST follow:
 3) Execute only one action per iteration. 
 4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.
 5) When a complex Task involves multiple questions or steps, select "ANSWER" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. 
-* Web Browsing Guidelines *
+6) When you get the ANSWER, your next step must be SUMMARY. 
+- IMPORTANT: You can ONLY use the key terms in the ANSWER for the SUMMARY search.
+- You must collect at least TWO DIFFERENT sources of user comments before summarizing.
+- You will jump to new web which content lots of posts. You need to do the search with key terms in the ANSWER first.
+7) When your are doing summary, please collected at least 2 contents then summary them. 
+ Web Browsing Guidelines *
 1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.
 2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.
 3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.
@@ -34,6 +41,7 @@ Key Guidelines You MUST follow:
 * Reply guidelines *
 1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.
 2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.
+3) When the ANSWER of the task has appeared, the user will provide online user comments related to it. Your task is to generate a structured and concise summary of the key points mentioned in the comments, highlighting the most frequently mentioned opinions.
 
 Your reply should strictly follow the format:
 Thought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}
@@ -53,6 +61,7 @@ SYSTEM_PROMPT_TEXT_ONLY = """Imagine you are a robot browsing the web, just like
 5. Go back, returning to the previous webpage.
 6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.
 7. Answer. This action should only be chosen when all questions in the task have been solved.
+8. Summary. This action should only be chosen after the ANSWER has been provided and the user has given online comments related to it.
 
 Correspondingly, Action should STRICTLY follow the format:
 - Click [Numerical_Label]
@@ -61,7 +70,8 @@ Correspondingly, Action should STRICTLY follow the format:
 - Wait
 - GoBack
 - Google
-- ANSWER; [content]
+- ANSWER; [only the Direct answer, DONOT include other information]|[Additional explanation or context]
+- SUMMARY; [content]
 
 Key Guidelines You MUST follow:
 * Action guidelines *
@@ -79,6 +89,7 @@ Key Guidelines You MUST follow:
 * Reply guidelines *
 1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.
 2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.
+3) When the ANSWER of the task has appeared, the user will provide online user comments related to it. Your task is to generate a structured and concise summary of the key points mentioned in the comments, highlighting the most frequently mentioned opinions.
 
 Your reply should strictly follow the format:
 Thought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}

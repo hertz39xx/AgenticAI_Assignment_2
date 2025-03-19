@@ -219,7 +219,8 @@ def extract_information(text):
         "wait": r"^Wait",
         "goback": r"^GoBack",
         "google": r"^Google",
-        "answer": r"ANSWER[; ]+\[?(.[^\]]*)\]?"
+        "answer": r"ANSWER[; ]+\[?(.[^\]]*)\]?",
+        "summary": r"SUMMARY[; ]+\[?(.[^\]]*)\]?"
     }
 
     for key, pattern in patterns.items():

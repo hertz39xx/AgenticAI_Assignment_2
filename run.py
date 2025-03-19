@@ -56,6 +56,7 @@ def driver_config(args):
             "plugins.always_open_pdf_externally": True
         }
     )
+    options.add_argument("disable-blink-features=AutomationControlled")
     return options
 
 
@@ -260,6 +261,62 @@ def exec_action_scroll(info, web_eles, driver_task, args, obs_info):
             actions.key_down(Keys.ALT).send_keys(Keys.ARROW_UP).key_up(Keys.ALT).perform()
     time.sleep(3)
 
+def generate_summary(openai_client, search_query, articles):
+    """ 總結搜尋結果 """
+    if not articles:
+        return "No relevant articles found."
+
+    article_text = "\n\n".join([
+        f"Title: {a['title']}\nSnippet: {a['snippet']}\nLink: {a['link']}"
+        for a in articles[:2]
+    ])
+
+    prompt = f"""
+    Below are some search results about "{search_query}". Summarize the main opinions, including major themes, positive feedback, and negative feedback.
+
+    {article_text}
+
+    SUMMARY;
+    """
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Summarize the following search results into major opinions, positive feedback, and negative feedback."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=500
+    )
+
+    return response.choices[0].message.content.strip()
+
+def google_search(driver, query):
+    """ Google 搜尋，排除 Facebook，並返回前 5 筆摘要資訊 """
+    driver.get(f"https://www.google.com/search?q={query} 評價")
+    time.sleep(1)
+
+    # search_box = driver.find_element(By.NAME, "q")
+    # search_box.send_keys(query)
+    # search_box.send_keys(Keys.RETURN)
+    # time.sleep(2)
+
+    search_results = driver.find_elements(By.CSS_SELECTOR, "div.tF2Cxc")
+    
+    articles = []
+    for result in search_results:
+        try:
+            title = result.find_element(By.CSS_SELECTOR, "h3").text
+            link = result.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+            snippet = result.find_element(By.CSS_SELECTOR, "div.VwiC3b").text  # Google 搜尋結果摘要
+            
+            if "facebook.com" not in link:
+                articles.append({"title": title, "link": link, "snippet": snippet})
+            
+            if len(articles) >= 5:  # 取前 5 筆
+                break
+        except Exception as e:
+            logging.error(f"Error extracting search result: {e}")
+    
+    return articles
 
 def main():
     # 參數設定
@@ -279,7 +336,7 @@ def main():
     parser.add_argument("--save_accessibility_tree", action='store_true')
     parser.add_argument("--force_device_scale", action='store_true')
     parser.add_argument("--window_width", type=int, default=1024)
-    parser.add_argument("--window_height", type=int, default=768)  # for headless mode, there is no address bar
+    parser.add_argument("--window_height", type=int, default=1024)  # for headless mode, there is no address bar
     parser.add_argument("--fix_box_color", action='store_true')
 
     args = parser.parse_args()
@@ -476,6 +533,113 @@ def main():
                 fail_obs = "Format ERROR: Both 'Thought' and 'Action' should be included in your reply."
                 continue
 
+            # 如果找到答案就再開一個視窗去網路衝浪 整理一下其他人怎麼想:D
+            if "ANSWER;" in gpt_4v_res:
+                logging.info(f"task{task_id} is completed. Using the answer to search ...")
+
+                # 抓出directly answer
+                match = re.search(r"ANSWER;\s*(.+)", gpt_4v_res)
+                
+                if match:
+                    extracted_text = match.group(1)
+                    search_query = extracted_text.split('|')[0].strip() 
+                    print(search_query)
+                    logging.info(f"Extracted answer: {search_query}")
+
+                    # 用答案去查
+                    try:
+                        if search_query:
+                            logging.info(f"Searching for: {search_query}")
+                            
+                            articles = google_search(driver_task, search_query)
+                            logging.info(f"Top search results: {articles}")
+                            
+                            if articles:
+                                summary_result = generate_summary(client, search_query, articles)
+                                logging.info(f"SUMMARY: {summary_result}")
+                                print(f"SUMMARY; {summary_result}")
+                                break
+                            else:
+                                logging.error("Not enough articles for summary.")
+                        # driver_task.get(f"https://www.google.com.tw/search?q={search_query} 評價")
+                        # time.sleep(1)  # 等待頁面載入
+                        # logging.info(f"Searching for: {search_query}")
+
+                        # search_results = driver_task.find_elements(By.CSS_SELECTOR, "div.tF2Cxc a")
+
+                        # article_links = []
+                        # for result in search_results:
+                        #     try:
+                        #         link = result.get_attribute("href")
+                        #         if "facebook.com" not in link:
+                        #             article_links.append(link)
+                        #         if len(article_links) >= 2:  # 只取前兩篇
+                        #             break
+                        #     except Exception as e:
+                        #         logging.error(f"Error extracting link: {e}")
+
+                        # # 檢查是否有足夠的結果
+                        # if len(article_links) < 1:
+                        #     logging.error("Not enough search results to process.")
+                        #     driver_task.quit()
+                        #     exit()
+
+                        # logging.info(f"Top 2 article links: {article_links}")
+
+                        # article_contents = []
+
+                        # for idx, link in enumerate(article_links):
+                        #     try:
+                        #         driver_task.get(link)
+                        #         time.sleep(3)  # 等待網頁載入
+                                
+                        #         # 嘗試擷取主要內文
+                        #         paragraphs = driver_task.find_elements(By.TAG_NAME, "p")  # 大多數文章主要內容會在 <p> 標籤中
+                        #         article_text = " ".join([p.text for p in paragraphs if len(p.text) > 20])  # 過濾掉過短的內容
+                                
+                        #         if article_text:
+                        #             article_contents.append(article_text)
+                        #             logging.info(f"Extracted content from article {idx+1}: {article_text[:200]}...")  # 只顯示前200字
+                        #         else:
+                        #             logging.warning(f"Article {idx+1} has no extractable content.")
+                            
+                        #     except Exception as e:
+                        #         logging.error(f"Error processing article {idx+1}: {e}")
+
+                        #     if len(article_contents) >= 1:
+                        #         summary_prompt = f"""
+                        #         The following are two articles about {search_query}. 
+                        #         Summarize the key opinions, including major themes, positive feedback, and negative feedback.
+
+                        #         Article 1:
+                        #         {article_contents[0][:1000]}  # 限制長度，避免 Prompt 太長
+
+                        #         Article 2:
+                        #         {article_contents[1][:1000]}
+
+                        #         SUMMARY;
+                        #         """
+                        #         logging.info("Generating SUMMARY...")
+                                
+                        #         # 呼叫 GPT 總結
+                        #         prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_gpt4v_api(args, client, [
+                        #             {"role": "system", "content": "Summarize the following articles into major opinions, positive feedback, and negative feedback."},
+                        #             {"role": "user", "content": summary_prompt}
+                        #         ])
+
+                        #         summary_result = openai_response.choices[0].message.content
+                        #         logging.info(f"SUMMARY: {summary_result}")
+                        #     else:
+                        #         logging.error("Not enough articles for summary.")
+
+
+                    except Exception as e:
+                        logging.error(f"Selenium search error: {e}")
+
+                else:
+                    logging.warning("No valid answer found in GPT response.")
+
+
             # bot_thought = re.split(pattern, gpt_4v_res)[1].strip()
             chosen_action = re.split(pattern, gpt_4v_res)[2].strip()
             # print(chosen_action)
@@ -557,11 +721,15 @@ def main():
                     driver_task.get('https://www.google.com/')
                     time.sleep(2)
 
-                elif action_key == 'answer':
+                # elif action_key == 'answer':
+                #     logging.info(info['content'])
+                #     logging.info('finish!!')
+                #     break
+                
+                elif action_key == 'summary':
                     logging.info(info['content'])
                     logging.info('finish!!')
                     break
-
                 else:
                     raise NotImplementedError
                 fail_obs = ""
