@@ -124,60 +124,69 @@ def format_msg_text_only(it, init_msg, pdf_obs, warn_obs, ac_tree):
 def call_gpt4v_api(args, openai_client, messages):
     # 呼叫GPT API，處理錯誤
     retry_times = 0
-    while True:
-        try:
-            if not args.text_only:
-                logging.info('Calling gpt4v API...')
-                openai_response = openai_client.chat.completions.create(
-                    model=args.api_model, messages=messages, max_tokens=1000, seed=args.seed
-                )
-            else:
-                logging.info('Calling gpt4 API...')
-                openai_response = openai_client.chat.completions.create(
-                    model=args.api_model, messages=messages, max_tokens=1000, seed=args.seed, timeout=30
-                )
+    
+    try:
+        while True:
+            try:
+                if not args.text_only:
+                    logging.info('Calling gpt4v API...')
+                    openai_response = openai_client.chat.completions.create(
+                        model=args.api_model, messages=messages, max_tokens=1000, seed=args.seed
+                    )
+                else:
+                    logging.info('Calling gpt4 API...')
+                    openai_response = openai_client.chat.completions.create(
+                        model=args.api_model, messages=messages, max_tokens=1000, seed=args.seed, timeout=30
+                    )
 
-            prompt_tokens = openai_response.usage.prompt_tokens
-            completion_tokens = openai_response.usage.completion_tokens
+                prompt_tokens = openai_response.usage.prompt_tokens
+                completion_tokens = openai_response.usage.completion_tokens
 
-            logging.info(f'Prompt Tokens: {prompt_tokens}; Completion Tokens: {completion_tokens}')
+                logging.info(f'Prompt Tokens: {prompt_tokens}; Completion Tokens: {completion_tokens}')
 
-            gpt_call_error = False
-            return prompt_tokens, completion_tokens, gpt_call_error, openai_response
+                gpt_call_error = False
+                print('gpt4v calling successful')
+                return prompt_tokens, completion_tokens, gpt_call_error, openai_response
 
-        except Exception as e:
-            logging.info(f'Error occurred, retrying. Error type: {type(e).__name__}')
+            except Exception as e:
+                logging.info(f'Error occurred, retrying. Error type: {type(e).__name__}')
 
-            if type(e).__name__ == 'RateLimitError':
-                time.sleep(10)
+                if type(e).__name__ == 'RateLimitError':
+                    time.sleep(10)
 
-            elif type(e).__name__ == 'APIError':
-                time.sleep(15)
+                elif type(e).__name__ == 'APIError':
+                    time.sleep(15)
 
-            elif type(e).__name__ == 'InvalidRequestError':
-                gpt_call_error = True
-                return None, None, gpt_call_error, None
+                elif type(e).__name__ == 'InvalidRequestError':
+                    gpt_call_error = True
+                    print("錯在哪: ", str(e))
+                    return None, None, gpt_call_error, None
 
-            else:
-                gpt_call_error = True
-                return None, None, gpt_call_error, None
+                else:
+                    gpt_call_error = True
+                    return None, None, gpt_call_error, None
 
-        retry_times += 1
-        if retry_times == 10:
-            logging.info('Retrying too many times')
-            return None, None, True, None
+            retry_times += 1
+            if retry_times == 10:
+                logging.info('Retrying too many times')
+                return None, None, True, None
+    except:
+        print('while錯誤')
 
 def call_reviewer(args, client, reviewer_messages, max_retries=3, retry_delay=2):
+    """
+    Calls the Reviewer Agent using OpenAI API with better error handling and retries.
+    """
     retries = 0
     while retries < max_retries:
         try:
-            logging.info('Calling reviewer api...')
+            print('call_reviewer-request')
             openai_response = client.chat.completions.create(
                 model=args.api_model,
                 messages=reviewer_messages,
                 temperature=args.temperature
             )
-            # logging.info(f'reviewer response: {openai_response.choices[0].message.content}')
+            print('call_reviewer_successful')
             return openai_response.usage.prompt_tokens, openai_response.usage.completion_tokens, False, openai_response
         except Exception as e:
             logging.error(f"Error in Reviewer Agent call (Attempt {retries + 1}/{max_retries}): {e}")
@@ -406,9 +415,11 @@ def main():
             else:
                 messages = clip_message_and_obs_text_only(messages, args.max_attached_imgs)
 
+            # print('messages: ', messages)
             # Call GPT-4v API
+            print("我在這嗎416")
             prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_gpt4v_api(args, client, messages)
-
+            print("我在這嗎418")
             if gpt_call_error:
                 break
             else:
@@ -417,7 +428,18 @@ def main():
                 logging.info(f'Accumulate Prompt Tokens: {accumulate_prompt_token}; Accumulate Completion Tokens: {accumulate_completion_token}')
                 logging.info('API call complete...')
             gpt_4v_res = openai_response.choices[0].message.content
+            print('gpt_4v calling result:', gpt_4v_res)
             messages.append({'role': 'assistant', 'content': gpt_4v_res})
+
+
+            # remove the rects on the website
+            # 執行完決策，移除掉方框
+            if (not args.text_only) and rects:
+                logging.info(f"Num of interactive elements: {len(rects)}")
+                for rect_ele in rects:
+                    driver_task.execute_script("arguments[0].remove()", rect_ele)
+                rects = []
+                # driver_task.save_screenshot(os.path.join(task_dir, 'screenshot{}_no_box.png'.format(it)))
 
             last_user_msg = next(
                 (msg["content"] for msg in reversed(messages) if msg["role"] == "user"), None
@@ -432,18 +454,25 @@ def main():
             else:
                 obs_content = ""
 
-            print('obs_content:', obs_content)
+            print('content:', obs_content)
 
-            # Call reviewer API
-            reviewer_msg = [
+            # 呼叫 reviewer 去思考目前想法跟動作是否可行
+            reviewer_messages = [
                 {'role': 'system', 'content': REVIEWER_PROMPTS},
-                {'role': 'user', 'content': f'observation:{obs_content}\nagent_decision:{gpt_4v_res}'}
+                {'role': 'user', 'content': 'Observation:'+obs_content+'\nAgent_decision:'+gpt_4v_res}
             ]
-            logging.info(f'reviewer_msg:{reviewer_msg}')
-            prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_reviewer(args, client, reviewer_msg)
+            prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_reviewer(args, client, reviewer_messages)
+            if gpt_call_error:
+                break
+            else:
+                accumulate_prompt_token += prompt_tokens
+                accumulate_completion_token += completion_tokens
+                logging.info(f'Accumulate Prompt Tokens: {accumulate_prompt_token}; Accumulate Completion Tokens: {accumulate_completion_token}')
+                logging.info('API call complete...')
             reviewer_res = openai_response.choices[0].message.content
-            logging.info(f'reviewer_res: {reviewer_res}')
-            messages.append({'role': 'user', 'content': f'Reviewer_thought:{reviewer_res}'})
+            messages.append({'role': 'reviewer', 'content': 'Reviewer_thought: ' + reviewer_res})
+            print('call_reviewer', reviewer_res)
+            logging.info(f"Reviewer Response: {reviewer_res}")
 
             # 用 Reviewer 回應判斷是否要重新生成
             if "Opinion: Not feasible" in reviewer_res:
@@ -456,16 +485,6 @@ def main():
                 logging.info('API call complete...')
                 gpt_4v_res = openai_response.choices[0].message.content
                 messages.append({'role': 'assistant', 'content': gpt_4v_res})
-
-            # remove the rects on the website
-            # 執行完決策，移除掉方框
-            if (not args.text_only) and rects:
-                logging.info(f"Num of interactive elements: {len(rects)}")
-                for rect_ele in rects:
-                    driver_task.execute_script("arguments[0].remove()", rect_ele)
-                rects = []
-                # driver_task.save_screenshot(os.path.join(task_dir, 'screenshot{}_no_box.png'.format(it)))
-
 
             # extract action info
             # 從GPT-4v的回應中，取得Thought, Action，兩個都要有才算完整的回覆
@@ -577,7 +596,7 @@ def main():
         # 結束，關閉瀏覽器
         print_message(messages, task_dir)
         driver_task.quit()
-        logging.info(f'Total cost(4o-mini): {accumulate_prompt_token / 1000000 * 0.15 + accumulate_completion_token / 1000000 * 0.60}')
+        logging.info(f'Total cost: {accumulate_prompt_token / 1000 * 0.01 + accumulate_completion_token / 1000 * 0.03}')
 
 
 if __name__ == '__main__':

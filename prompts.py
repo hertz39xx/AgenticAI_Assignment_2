@@ -30,6 +30,7 @@ Key Guidelines You MUST follow:
 3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.
 4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.
 5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.
+6) When you've stay in the same page and interact with the same element for two continuous iterations, you should consider to change to other possible action.
 * Reply guidelines *
 1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.
 2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.

@@ -1,3 +1,3 @@
-{"web_name": "google", "id": "test_google--0", "ques": "find the news of today.", "web": "https://google.com/"}
+{"web_name": "google_map", "id": "google_map_test--0", "ques": "Find who post the newest comment to the place which called 永川牛肉麵", "web": "https://google.com.tw/maps/"}
 {"web_name": "street_voice", "id": "street_voice--0", "ques": "find the song which is the most popular in this week.", "web": "https://streetvoice.com/"}
-{"web_name": "course_schedule_system", "id": "course_schedule_system--0", "ques": "Find the instructor of course which named Operating System.", "web": "https://cis.ncu.edu.tw/Course/main/news/announce"}
+{"web_name": "course_schedule_system", "id": "course_schedule_system--0", "ques": "Find the instructor of course which named Operating System through the Department of Computer Science in year 113 semester 2.", "web": "https://cis.ncu.edu.tw/Course/main/news/announce"}
