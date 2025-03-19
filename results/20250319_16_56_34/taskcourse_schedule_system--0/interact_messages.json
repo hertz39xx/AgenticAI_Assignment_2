@@ -1,0 +1,44 @@
+[
+  {
+    "role": "system",
+    "content": "Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element.\nCarefully analyze the visual information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions:\n1. Click a Web Element.\n2. Delete existing content in a textbox and then type content. \n3. Scroll up or down. Multiple scrolls are allowed to browse the webpage. Pay attention!! The default scroll is the whole window. If the scroll widget is located in a certain area of the webpage, then you have to specify a Web Element in that area. I would hover the mouse there and then scroll.\n4. Wait. Typically used to wait for unfinished webpage processes, with a duration of 5 seconds.\n5. Go back, returning to the previous webpage.\n6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.\n7. Answer. This action should only be chosen when all questions in the task have been solved.\n\nCorrespondingly, Action should STRICTLY follow the format:\n- Click [Numerical_Label]\n- Type [Numerical_Label]; [Content]\n- Scroll [Numerical_Label or WINDOW]; [up or down]\n- Wait\n- GoBack\n- Google\n- ANSWER; [content]\n\nKey Guidelines You MUST follow:\n* Action guidelines *\n1) To input text, NO need to click textbox first, directly type content. After typing, the system automatically hits `ENTER` key. Sometimes you should click the search button to apply search filters. Try to use simple language when searching.  \n2) You must Distinguish between textbox and search button, don't type content into the button! If no textbox is found, you may need to click the search button first before the textbox is displayed. \n3) Execute only one action per iteration. \n4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.\n5) When a complex Task involves multiple questions or steps, select \"ANSWER\" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. \n* Web Browsing Guidelines *\n1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.\n2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.\n3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.\n4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.\n5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.\n* Reply guidelines *\n1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.\n2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.\n\nYour reply should strictly follow the format:\nThought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}\nAction: {One Action format you choose}\n\nThen the User will provide:\nObservation: {A labeled screenshot Given by User}\nReviewer_thought: {[Optional]Your original_reply and the judgement from reviewer base on your original_reply}\n"
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Now given a task: Find the instructor of course which named Operating System.  Please interact with https://cis.ncu.edu.tw/Course/main/news/announce and get the answer. \nObservation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[0]: \"English\";\t[1]: \"Site Map\";\t[2]: \"\u95dc\u65bc\u672c\u7cfb\u7d71\";\t[3]: \"\u4f7f\u7528\u624b\u518a\";\t[4]: \"\u76f8\u95dc\u8cc7\u8a0a\";\t[5]: \"\u8ab2\u7a0b\u67e5\u8a62\";\t[6]: \"\u767b\u5165\u7cfb\u7d71\";\t[7]: \"Home\";\t[8]: \"\u65b0\u9078\u8ab2\u767b\u8a18\u7cfb\u7d71\";\t[9]: \"\u76f8\u95dc\u8cc7\u8a0a\";\t[10]: \"\u8ab2\u52d9\u7d44\u516c\u544a\";\t[11]: \"\u7562\u5be9\u7cfb\u7d71\";\t[12]: \"\u9060\u8ddd\u6559\u5b78\u7db2\";\t[13]: \"\u653f\u6cbb\u5927\u5b78\";\t[14]: \"\u6e05\u83ef\u5927\u5b78\";\t[15]: \"\u967d\u660e\u4ea4\u901a\u5927\u5b78\";\t[16]: \"\u4e2d\u539f\u5927\u5b78\";\t[17]: \"\u5143\u667a\u5927\u5b78\";\t[18]: \"\u8aee\u5546\u4e2d\u5fc3\u5c0e\u5e2b\u8f14\u5c0e\u9078\u8ab2\u78ba\u8a8d\u55ae\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "assistant",
+    "content": "**Thought:** The task is to find the instructor for the \"Operating System\" course. Based on the screenshot, I need to access the course inquiry section, which is labeled as \"[5]\u8ab2\u7a0b\u67e5\u8a62\". This section likely contains information regarding the courses including their instructors.\n\n**Action:** Click [5]"
+  },
+  {
+    "role": "reviewer",
+    "content": "Reviewer_thought: Opinion: Feasible"
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Observation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[0]: \"English\";\t[1]: \"Site Map\";\t[2]: \"\u95dc\u65bc\u672c\u7cfb\u7d71\";\t[3]: \"\u4f7f\u7528\u624b\u518a\";\t[4]: \"\u76f8\u95dc\u8cc7\u8a0a\";\t[5]: \"\u8ab2\u7a0b\u67e5\u8a62\";\t[6]: \"\u767b\u5165\u7cfb\u7d71\";\t[7]: \"Home\";\t[8]: \"\u65b0\u9078\u8ab2\u767b\u8a18\u7cfb\u7d71\";\t[9]: \"\u76f8\u95dc\u8cc7\u8a0a\";\t[10]: \"\u8ab2\u52d9\u7d44\u516c\u544a\";\t[11]: \"\u7562\u5be9\u7cfb\u7d71\";\t[12]: \"\u9060\u8ddd\u6559\u5b78\u7db2\";\t[13]: \"\u653f\u6cbb\u5927\u5b78\";\t[14]: \"\u6e05\u83ef\u5927\u5b78\";\t[15]: \"\u967d\u660e\u4ea4\u901a\u5927\u5b78\";\t[16]: \"\u4e2d\u539f\u5927\u5b78\";\t[17]: \"\u5143\u667a\u5927\u5b78\";\t[18]: \"\u8aee\u5546\u4e2d\u5fc3\u5c0e\u5e2b\u8f14\u5c0e\u9078\u8ab2\u78ba\u8a8d\u55ae\";\t[23]: \"\u7576\u5b78\u671f\u8ab2\u7a0b\u8cc7\u6599\";\t[25]: \"\u4f9d\u7167\u958b\u8ab2\u55ae\u4f4d\u67e5\u8a62\";\t[27]: \"\u4f9d\u7167\u6388\u8ab2\u5c0d\u8c61\u67e5\u8a62\";\t[29]: \"\u67e5\u8a62\u901a\u8b58\u8ab2\u7a0b\";\t[31]: \"\u67e5\u8a62\u5b78\u5206\u5b78\u7a0b\u958b\u8a2d\u8ab2\u7a0b\";\t[33]: \"\u67e5\u8a62\u7b2c\u4e8c\u5c08\u9577\u8ab2\u7a0b\";\t[35]: \"\u67e5\u8a62\u4ee5\u82f1\u8a9e\u6388\u8ab2\u4e4b\u8ab2\u7a0b\";\t[37]: \"\u67e5\u8a62EMI\u8ab2\u7a0b\";\t[39]: \"\u6691\u4fee\u8ab2\u7a0b\u67e5\u8a62\";\t[41]: \"\u6821\u969b\u9078\u8ab2\u8cc7\u6599\";\t[43]: \"\u958b\u653e\u5916\u6821\u751f\u4fee\u8b80\u8ab2\u7a0b\";\t[45]: \"\u958b\u653e\u793e\u6703\u4eba\u58eb\u4fee\u8b80\u8ab2\u7a0b\";\t[47]: \"\u6b77\u5e74\u8ab2\u7a0b\u8cc7\u6599\";\t[49]: \"\u4f9d\u95dc\u9375\u5b57/\u6642\u9593/\u958b\u8ab2\u55ae\u4f4d\u67e5\u8a62\";\t[51]: \"\u4f9d\u5e74\u4efd\u67e5\u8a62\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  }
+]

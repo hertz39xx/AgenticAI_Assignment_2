@@ -1,0 +1,49 @@
+[
+  {
+    "role": "system",
+    "content": "Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element.\nCarefully analyze the visual information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions:\n1. Click a Web Element.\n2. Delete existing content in a textbox and then type content. \n3. Scroll up or down. Multiple scrolls are allowed to browse the webpage. Pay attention!! The default scroll is the whole window. If the scroll widget is located in a certain area of the webpage, then you have to specify a Web Element in that area. I would hover the mouse there and then scroll.\n4. Wait. Typically used to wait for unfinished webpage processes, with a duration of 5 seconds.\n5. Go back, returning to the previous webpage.\n6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.\n7. Answer. This action should only be chosen when all questions in the task have been solved.\n\nCorrespondingly, Action should STRICTLY follow the format:\n- Click [Numerical_Label]\n- Type [Numerical_Label]; [Content]\n- Scroll [Numerical_Label or WINDOW]; [up or down]\n- Wait\n- GoBack\n- Google\n- ANSWER; [content]\n\nKey Guidelines You MUST follow:\n* Action guidelines *\n1) To input text, NO need to click textbox first, directly type content. After typing, the system automatically hits `ENTER` key. Sometimes you should click the search button to apply search filters. Try to use simple language when searching.  \n2) You must Distinguish between textbox and search button, don't type content into the button! If no textbox is found, you may need to click the search button first before the textbox is displayed. \n3) Execute only one action per iteration. \n4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.\n5) When a complex Task involves multiple questions or steps, select \"ANSWER\" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. \n* Web Browsing Guidelines *\n1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.\n2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.\n3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.\n4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.\n5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.\n* Reply guidelines *\n1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.\n2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.\n\nYour reply should strictly follow the format:\nThought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}\nAction: {One Action format you choose}\n\nThen the User will provide:\nObservation: {A labeled screenshot Given by User}\nReviewer_thought: {[Optional]Your original_reply and the judgement from reviewer base on your original_reply}\n"
+  },
+  {
+    "role": "user",
+    "content": "Now given a task: find the song which is the most popular in this week.  Please interact with https://streetvoice.com/ and get the answer.Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "**Thought:** The screenshot shows the \"\u6392\u884c\u699c\" (Charts) section, which likely contains the information about this week's most popular songs. I should click on the element labeled \"\u6392\u884c\u699c\" (Numerical Label: 3) to access the rankings and find the most popular song.\n\n**Action:** Click [3]"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "**Thought:** The element labeled \"\u6392\u884c\u699c\" (Numerical Label: 2) likely contains the weekly rankings of songs. To find the most popular song this week, I need to click on this element to access the charts.\n\n**Action:** Click [2]"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "**Thought:** The screenshot reveals the current \"\u5373\u6642\u6392\u884c\" (Real-time Rankings) section. The most popular song is at the top of this section, which shows \"ERASER\" as the number one song currently. To confirm this, I should check the total ranking or explore the details of the song if needed.\n\n**Action:** Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Observation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[1]: \"\u5cf6 SHIMA\uff08Demo\uff09\";\t[2]: \"OBSESS\";\t[3]: <button> \"\";\t[6]: \"\u563b\u54c8\";\t[7]: \"\u90fd\u6703\";\t[8]: \"\u96fb\u5b50\";\t[9]: \"\u63a2\u7d22\";\t[12]: \"ERASER\";\t[13]: \"\u5fd8\u6182\u6c34 WonderWater\";\t[14]: <button> \"175\";\t[15]: <button> \"\";\t[17]: \"42 \u5275\u4f5c\u7d44_\u6771\u90e8\u58de\u7537\u5b69 Bad Boys From The East_\u64c1\u6709\u7c89\u7d05\u8272\";\t[18]: \"\u6771\u90e8\u58de\u7537\u5b69 Bad Boy From East\";\t[19]: <button> \"59\";\t[20]: <button> \"\";\t[22]: \"\u611b\u59b3\u662f\";\t[23]: \"\u30bd\u30d3 soby\";\t[24]: <button> \"1.5k\";\t[25]: <button> \"\";\t[27]: \"\u9700\u8981\u88ab\u9700\u8981 (\u8a31\u9858\u4f4e\u654f\u7248)\";\t[28]: \"Night Keepers \u5b88\u591c\u4eba\";\t[29]: <button> \"51\";\t[30]: <button> \"\";\t[32]: \"\u5beb\u6b4c\u81ea\u6551demo\";\t[33]: \"\u9ec3\u82e5\u6b23\";\t[34]: <button> \"32\";\t[35]: <button> \"\";\t[37]: \"\u9ec3\u5b50\u4f7c&\u4ed6\u7684\u5783\u573e\u6f14\u85dd\u5708\u5c0f\u4f19\u4f34diss track\";\t[38]: \"\u56b4\u5d50\";\t[39]: <button> \"149\";\t[40]: <button> \"\";\t[42]: \"\u7279\u5225 / SPECIAL\";\t[43]: \"\u9db4 The Crane\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "assistant",
+    "content": "**Thought:** The screenshot provides the current weekly song rankings. The most popular song this week is \"ERASER,\" which is listed as number one. I should note the additional details or metrics of this song if necessary. Since I already have the song information, I would just need to finalize my actions.\n\n**Action:** ANSWER; The most popular song this week is \"ERASER.\""
+  }
+]

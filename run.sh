@@ -1,7 +1,13 @@
 #!/bin/bash
+
+# 載入環境變數
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 nohup python -u run.py \
     --test_file ./data/tasks_test.jsonl \
-    --api_key YOUR_OPENAI_API_KEY \
+    --api_key $OPENAI_API_KEY \
     --headless \
     --max_iter 15 \
     --max_attached_imgs 3 \
