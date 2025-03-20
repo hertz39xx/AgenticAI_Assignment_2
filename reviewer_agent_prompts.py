@@ -21,7 +21,7 @@ The agent can only take the action below:
 - Wait
 - GoBack
 - Google
-- ANSWER; [Direct answer]; [Additional explanation or context]
+- ANSWER; [only the answer, DONOT include other information]|[Additional explanation or context]
 - SUMMARY; [content]
 
 Your reply should strictly follow the format:

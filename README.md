@@ -85,3 +85,14 @@ This is an automated information retrieval and summarization Agentic AI which ca
 **Example summary:**
 ![alt text](image-1.png)
 ### Results: Successfully searched for the top song of this week. But occasionally failed to enter the weekly ranking, only stay in the overall ranking.
+
+## Citation
+Original paper of Webvoyager:
+```
+@article{he2024webvoyager,
+  title={WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models},
+  author={He, Hongliang and Yao, Wenlin and Ma, Kaixin and Yu, Wenhao and Dai, Yong and Zhang, Hongming and Lan, Zhenzhong and Yu, Dong},
+  journal={arXiv preprint arXiv:2401.13919},
+  year={2024}
+}
+```
