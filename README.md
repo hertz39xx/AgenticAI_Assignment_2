@@ -53,8 +53,9 @@ This is an automated information retrieval and summarization Agentic AI which ca
 ## Interact between two-LLM (Agent & Reviewer)
 ![alt text](image-3.png)
 ### For example, in the log you can see the process of interaction. The Reviewer will give opinion (Feasibile/Not Feasible) and some reason/suggestion to agent.
+![alt text](image-7.png)
+### Back to <code>run.py</code>, when reviewer return "Not feasible" it will go to the part which ask the agent re-generate.
 
----
 ## Test Cases ###
 ### 1. Search the price and product name for the iRocks K85 keyboard(Gray) on PChome.
 ```
@@ -63,27 +64,28 @@ This is an automated information retrieval and summarization Agentic AI which ca
 ![alt text](results/20250320_04_38_17/taskpchome--0/screenshot2.png)
 
 **Example summary:**
-![alt text](image-2.png)
+![alt text](image-6.png)
 ### Results: Successfully searched for iRocks K85 keyboard. But occasionally failed to generated summary correctly, due to the answer’s content.
 
 ### 2. Use Google to search for the English name, release date, and publisher of《刺客教條：暗影者》.
 ```
 {"web_name": "google_search", "id": "google_search_task--0", "ques": "Find 《刺客教條：暗影者》's english name, publish date and publisher.", "web": "https://google.com"}
 ```
-![alt text](results/20250320_04_56_53/taskgoogle_search_task--0/screenshot2.png)
+![!\[alt text\](results/20250320_04_56_53/taskgoogle_search_task--0/screenshot2.png)
+](results/20250320_13_27_29/taskgoogle_search_task--0/screenshot2.png)
 
 **Example summary:**
-![alt text](image.png)
+![alt text](image-4.png)
 ### Results: Name, publisher and date and be extract correctly, and generate summary successfully.
 
 ### 3. StreetVoice Music Ranking Search
 ```
 {"web_name": "street_voice", "id": "street_voice--0", "ques": "Find the songs ranking, then find the most popular song of this week. And make sure that song has more than 100 likes. ", "web": "https://streetvoice.com/"}
 ```
-![alt text](results/20250320_04_38_17/taskstreet_voice--0/screenshot2.png)
+![!\[alt text\](results/20250320_04_38_17/taskstreet_voice--0/screenshot2.png)](results/20250320_13_29_16/taskstreet_voice--0/screenshot3.png)
 
 **Example summary:**
-![alt text](image-1.png)
+![alt text](image-5.png)
 ### Results: Successfully searched for the top song of this week. But occasionally failed to enter the weekly ranking, only stay in the overall ranking.
 
 ## Citation

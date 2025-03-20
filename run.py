@@ -505,7 +505,6 @@ def main():
             # 用 Reviewer 回應判斷是否要重新生成
             if "Opinion: Not feasible" in reviewer_res:
                 logging.info("Reviewer determined that the action is not feasible. Please reconsider your Thought and Action.")
-                # messages.append('Reviewer_thought'+reviewer_res)
                 prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_gpt4v_api(args, client, messages)
                 accumulate_prompt_token += prompt_tokens
                 accumulate_completion_token += completion_tokens
