@@ -1,6 +1,7 @@
 ## Assignment 1 - Reflexive Web Agent with Tools Use ##
 > [!note]
 > **核心功能：**<br>
+> testest
 > (1) 新增LLM-Reviewer對Agent輸出做初步審查，當可行性低時重新生成操作<br>
 > (2) 新增Summary動作，輸出Answer後會使用答案做搜尋並針對網路結果做正負面總結<br>
 >
@@ -98,3 +99,8 @@ Original paper of Webvoyager:
   year={2024}
 }
 ```
+## TODO LIST:
+可能情境:
+1) 查詢並非特定產品，可能出現多個結果(如：查詢機械鍵盤)，讓他可以處理多個產品並針對每個產品做懶人包 => 評比工具
+2) 爬社群平台的時候應該不需要用到視覺啦(如threads那種文字為主的)
+3) 可以考慮輸出總結評比報告(加上產品圖片那種)
