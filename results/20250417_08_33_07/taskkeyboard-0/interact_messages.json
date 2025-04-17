@@ -1,0 +1,145 @@
+[
+  {
+    "role": "system",
+    "content": "Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element.\nCarefully analyze the visual information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions:\n1. Click a Web Element.\n2. Delete existing content in a textbox and then type content. \n3. Scroll up or down. Multiple scrolls are allowed to browse the webpage. Pay attention!! The default scroll is the whole window. If the scroll widget is located in a certain area of the webpage, then you have to specify a Web Element in that area. I would hover the mouse there and then scroll.\n4. Wait. Typically used to wait for unfinished webpage processes, with a duration of 5 seconds.\n5. Go back, returning to the previous webpage.\n6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.\n7. Answer. This action should only be chosen when all questions in the task have been solved.\n8. Summary. This action should only be chosen after the ANSWER has been provided and the user has given online comments related to it.\n\nCorrespondingly, Action should STRICTLY follow the format:\n- Click [Numerical_Label]\n- Type [Numerical_Label]; [Content]\n- Scroll [Numerical_Label or WINDOW]; [up or down]\n- Wait\n- GoBack\n- Google\n- ANSWER; [only the Direct answer, DONOT include other information]|[Additional explanation or context]\n- SUMMARY; [Major opinions]|[Positive feedback]|[Negative feedback]\n\nKey Guidelines You MUST follow:\n* Action guidelines *\n1) To input text, NO need to click textbox first, directly type content. After typing, the system automatically hits `ENTER` key. Sometimes you should click the search button to apply search filters. Try to use simple language when searching.  \n2) You must Distinguish between textbox and search button, don't type content into the button! If no textbox is found, you may need to click the search button first before the textbox is displayed. \n3) Execute only one action per iteration. \n4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.\n5) When a complex Task involves multiple questions or steps, select \"ANSWER\" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. \n6) When you get the ANSWER, your next step must be SUMMARY. \n- IMPORTANT: You can ONLY use the key terms in the ANSWER for the SUMMARY search.\n- IMPORTANT: You must write SUMMMARY in Taiwanese Traditional Chinese \u53f0\u7063\u7e41\u9ad4\u4e2d\u6587. \u6ce8\u610f\uff1a\u4f60\u5fc5\u9808\u7528\u53f0\u7063\u7e41\u9ad4\u4e2d\u6587\u64b0\u5beb\u6458\u8981\u7684\u5167\u5bb9\u3002\n- You must collect at least TWO DIFFERENT sources of user comments before summarizing.\n- You will jump to new web which content lots of posts. You need to do the search with key terms in the ANSWER first.\n7) When your are doing summary, please collected at least 2 contents then summary them.\n8) Pleae follow the planner's plan to do the task. Step by step.\n Web Browsing Guidelines *\n1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.\n2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.\n3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.\n4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.\n5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.\n6) When you've stay in the same page and interact with the same element for two continuous iterations, you should consider to change to other possible action.\n* Reply guidelines *\n1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.\n2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.\n3) When the ANSWER of the task has appeared, the user will provide online user comments related to it. Your task is to generate a structured and concise summary of the key points mentioned in the comments, highlighting the most frequently mentioned opinions.\n\nYour reply should strictly follow the format:\nThought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}\nAction: {One Action format you choose}\n\nThen the User will provide:\nObservation: {A labeled screenshot Given by User}\nReviewer_thought: {[Optional]Your original_reply and the judgement from reviewer base on your original_reply}\n"
+  },
+  {
+    "role": "user",
+    "content": "\u9019\u662f\u6839\u64da\u4efb\u52d9\u63cf\u8ff0\u7522\u751f\u7684\u898f\u5283\u6b65\u9a5f\uff1a\nStep 1: \u6253\u958b\u4e00\u500b\u641c\u5c0b\u5f15\u64ce\u3002\nStep 2: \u5728\u641c\u5c0b\u6b04\u4e2d\u8f38\u5165\u95dc\u9375\u5b57\u300c\u6700\u591a\u4eba\u8cfc\u8cb7 \u9375\u76e4\u300d\u3002\nStep 3: \u9ede\u64ca\u641c\u5c0b\u6309\u9215\u3002\nStep 4: \u6372\u52d5\u9801\u9762\u4e26\u9ede\u64ca\u770b\u8d77\u4f86\u50cf\u662f\u7522\u54c1\u63a8\u85a6\u6216\u6392\u884c\u699c\u7684\u641c\u5c0b\u7d50\u679c\u3002\nStep 5: \u6372\u52d5\u9032\u5165\u7684\u9801\u9762\uff0c\u5c0b\u627e\u95dc\u65bc\u9375\u76e4\u7684\u92b7\u552e\u91cf\u6216\u53d7\u6b61\u8fce\u7a0b\u5ea6\u7684\u8cc7\u8a0a\u3002\n"
+  },
+  {
+    "role": "system",
+    "content": "\u8acb\u6839\u64da\u524d\u9762\u898f\u5283\u597d\u7684\u6b65\u9a5f\uff0c\u9010\u6b65\u5b8c\u6210\u6bcf\u4e00\u9805\uff0c\u5f9e Step 1 \u958b\u59cb\u3002"
+  },
+  {
+    "role": "user",
+    "content": "Now given a task: \u641c\u5c0b\u73fe\u5728\u6700\u591a\u4eba\u8cfc\u8cb7\u7684\u9375\u76e4\u662f\u54ea\u4e00\u628a\u3002  Please interact with https://www.inpad.com.tw/ and get the answer.Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The task requires finding the most purchased keyboard currently. The next step involves using a search engine to search for keyboards that are currently popular based on sales. The first action is to open a search engine.\n\nAction: Google"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot shows the Google homepage with a search bar. The next logical step is to input the search query \"\u6700\u591a\u4eba\u8cfc\u8cb7 \u9375\u76e4\" into the search bar and initiate the search.\n\nAction: Type [6]; \u6700\u591a\u4eba\u8cfc\u8cb7 \u9375\u76e4"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: In the results shown, there are several links that could lead to keyboard recommendations or popular products. The next step is to click on a link that seems to offer product recommendations, specifically one that mentions a list or ranking of keyboards.\n\nAction: Click [18]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot displays a ranking of gaming keyboards with a title indicating that it includes the top ten recommended keyboards for 2025. It lists specific keyboard models. The next logical step is to scroll down to find more details about the keyboards to gather information on their popularity or sales figures.\n\nAction: Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot presents a ranking of the top 5 mechanical gaming keyboards, with specific models listed along with links to different shopping platforms like momo and Yahoo\u8cfc\u7269\u4e2d\u5fc3. The first item, \"logitech G512,\" appears to be the most popular keyboard currently as it occupies the top position. The next step would be to confirm this by collecting specific details or sales numbers to answer the task directly.\n\nAction: Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "You have repeated the same Action as a previous step: `Scroll [WINDOW]; down`.\nPlease choose a different action."
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: Since I've already performed prior scrolling actions without new content appearing, the next step will be to click on the link for the top keyboard to find more detailed information regarding its popularity or sales figures.\n\nAction: Click [0]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Not Feasible. Based on the screenshot, element [0] is the google search box. Clicking it again will not provide useful information. You should go back and click on one of the product links.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot indicates that the Logitech G512 is the most popular keyboard, as it is listed as number one in the ranking. The product information includes details such as its price ($2,590) and features. There are two links available for purchasing options: one for momo and another for Yahoo\u8cfc\u7269\u4e2d\u5fc3. The next step is to click on the link to Yahoo\u8cfc\u7269\u4e2d\u5fc3 to potentially get more details or to make a purchase.\n\nAction: Click [9]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot shows various listings for the Logitech G512 keyboard on Yahoo\u8cfc\u7269\u4e2d\u5fc3. The details include multiple variants of the G512 keyboard with prices, star ratings, and sales figures. The most relevant and popular option seems to be the first listing priced at $2,190 with a sales volume greater than 50. The next step is to check if there are further details regarding its sales or popularity, potentially by clicking on the product link to access more information.\n\nAction: Click [42]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot displays the Logitech G512 mechanical gaming keyboard with a price of $2,190. It includes promotional details like discounts and loyalty programs, which indicate its popularity. Since this is the keyboard we are focused on, I will gather the information on its features and the price for the final answer.\n\nAction: Click [32]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Not Feasible. The element [32] is not visible in the screenshot, so it cannot be clicked. Please check the screenshot again and choose a visible element to click, or use other actions to achieve the task.\n"
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Observation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[0]: <button> \"\";\t[1]: <button> \"\";\t[10]: <button> \"\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot indicates that I'm on a product detail page for the Logitech keyboard, with navigation buttons visible for going back or forward through images. To find details about the keyboard's most popular features or specifications, clicking on the button that allows you to view more images or details of the product is a good next step.\n\nAction: Click [1]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  }
+]

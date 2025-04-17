@@ -43,7 +43,7 @@ $ python run.py
 ![alt text](image-8.png)
 
 ### 2. 意圖確認
-當使用者給的任務太過模糊時，Agent會先與使用者對話以釐清具體任務目標(參見check_user_intent方法)：
+### Agent 會先與使用者對話以釐清具體任務目標，再將其生成為任務的task query(參見check_user_intent方法)：
 ![alt text](image-10.png)
 
 ### 範例對話過程(當使用者任務只給「鍵盤」兩字時)：
@@ -52,6 +52,9 @@ $ python run.py
 ![alt text](image-13.png)
 
 ![alt text](image-14.png)
+
+### 範例對話過程(當使用者任務為空白時)：
+![alt text](image-24.png)
 
 ### 範例Log紀錄：
 ![alt text](image-15.png)

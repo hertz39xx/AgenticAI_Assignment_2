@@ -12,3 +12,4 @@
 {"web_name": "pchome", "id": "pchome--0", "ques": "Find \"irocks k85\" on pchome. And make sure the color of keyboard is gray. Give the price and name.", "web": "https://24h.pchome.com.tw/"}
 
 {"web_name": "course_system", "id": "course--1", "ques": "", "web": "https://cis.ncu.edu.tw/Course/main/news/announce"}
+{"web_name": "street_voice", "id": "street_voice--0", "ques":"", "web": "https://streetvoice.com/"}
