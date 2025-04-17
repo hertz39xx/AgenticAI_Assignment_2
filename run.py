@@ -51,6 +51,8 @@ def check_user_intent(origin_input):
                     Question: {[Optional] If No, please provide a question to re-ask the user's intent.}
                     5. 使用者應該要提供：想找什麼、為什麼要找等等各項可能的細節。
                     6. 使用者詢問的範圍不單只是商品，還可能是歌曲、電影、選課系統等等。
+                    7. 如果是商品：應該要包含品牌、型號、價格等等各項可能的細節。
+                    8. 如果是其他搜尋：應該要包含關鍵字、主題、範圍等等各項可能的細節。
                 """,),
             contents=f"以下是使用者的歷史輸入: {history}")
      
@@ -398,7 +400,7 @@ def main():
     # 參數設定
     parser = argparse.ArgumentParser()
     parser.add_argument('--test_file', type=str, default='data/test.json')
-    parser.add_argument('--max_iter', type=int, default=10)
+    parser.add_argument('--max_iter', type=int, default=20)
     parser.add_argument("--api_key", default=os.getenv('OPENAI_API_KEY'), type=str, help="YOUR_OPENAI_API_KEY")
     parser.add_argument("--api_model", default="gpt-4o-mini", type=str, help="api model name")
     parser.add_argument("--output_dir", type=str, default='results')

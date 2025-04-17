@@ -1,7 +1,7 @@
 ## Assignment 2 - Reflection + Multi-Agent ##
 > [!note]
 > **核心功能：**<br>
-> (1) 新增 Planner，使 Agent 可以根據步驟思考如何操作<br>
+> (1) 新增 Planner，使 Search Agent 可以根據步驟思考如何操作<br>
 > (2) 新增意圖確認，當使用者任務不明確時機器人會與使用者對話以確立具體任務 <br>
 > (3) 調整 Reviewer，更換模型、修改Prompts，提升糾正效果<br>
 > (4) 加入動作紀錄，避免在同一個操作上鬼打牆 <br>
