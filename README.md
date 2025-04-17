@@ -59,6 +59,8 @@ $ python run.py
 ### 範例對話過程(當使用者任務為空白時)：
 ![alt text](image-24.png)
 
+![alt text](image-29.png)
+
 ### 範例Log紀錄：
 ![alt text](image-15.png)
 
