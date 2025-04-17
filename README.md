@@ -5,12 +5,15 @@
 > (2) 新增意圖確認，當使用者任務不明確時機器人會與使用者對話以確立具體任務 <br>
 > (3) 調整 Reviewer，更換模型、修改Prompts，提升糾正效果<br>
 > (4) 加入動作紀錄，避免在同一個操作上鬼打牆 <br>
+>   
 > [我的Repo Link - hertz39xx/AgenticAI_Assignment_2](https://github.com/hertz39xx/AgenticAI_Assignment_2)
 > 
-**Assigment description:** Please implement an Agentic AI system focusing on tool usage and planning capabilities. Your solution should demonstrate the ability to interact with web environments and execute tasks effectively.<br>
+**Assigment description:** Improve your AI system by implementing reflection mechanisms and multi-agent collaboration to enhance decision-making and problem-solving capabilities.
+Enhance your Assignment 1 system using:
+Reflection mechanisms for self-assessment
+Multi-agent collaboration for distributed decision-making<br>
 This assisgment is edited from [WebVoyager](https://github.com/MinorJerry/WebVoyager)🫡
 
----
 ## Setup Environment ##
 For this project, you need a environment with <code>python=3.10</code>
 
@@ -77,36 +80,34 @@ $ python run.py
 ![alt text](image-23.png)
 
 ## Test Cases ###
-### 1. Search the price and product name for the iRocks K85 keyboard(Gray) on PChome.
+> 為測試與使用者溝通意圖的能力，故 ques 皆為不完整或空白之輸入。
+### 1. Search publisher's info of a game.
 ```
-{"web_name": "pchome", "id": "pchome--0", "ques": "Find irocks k85 on pchome. And make sure the color of keyboard is gray. Give the price and name.", "web": "https://24h.pchome.com.tw/"}
+{"web_name": "google_search", "id": "google_search_task--0", "ques": "Search 刺客教條", "web": "https://google.com"}
 ```
-![alt text](results/20250320_04_38_17/taskpchome--0/screenshot2.png)
+![alt text](<results/遊戲 - task1/taskgoogle_search_task--0/screenshot4.png>)
 
+**Example output:**
+![alt text](image-25.png)
+
+### 2. Search the professor of specific course.
+```
+{"web_name": "course_system", "id": "course--1", "ques": "", "web": "https://cis.ncu.edu.tw/Course/main/news/announce"}
+
+```
+![alt text](results/選課-task2/taskcourse--1/screenshot8.png)
 **Example summary:**
-![alt text](image-6.png)
-### Results: Successfully searched for iRocks K85 keyboard. But occasionally failed to generated summary correctly, due to the answer’s content.
-
-### 2. 搜尋刺客教條暗影者的發行商資訊 (且使用者最初任務模糊不清).
-```
-{"web_name": "google", "id": "google--0", "ques": "刺客教條", "web": "https://google.com.tw/"}
-```
-![!\[!\\[alt text\\](results/20250320_04_56_53/taskgoogle_search_task--0/screenshot2.png)
-\](!\[results/20250320_13_27_29/taskgoogle_search_task--0/screenshot2.png\](results/task2/taskgoogle_search_task--0/screenshot2.png))](results/task2/taskgoogle_search_task--0/screenshot2.png)
-
-**Example summary:**
-![alt text](image-20.png)
+![alt text](image-27.png)
 
 ### 3. StreetVoice Music Ranking Search
 ```
-{"web_name": "street_voice", "id": "street_voice--0", "ques": "Find the songs ranking, then find the most popular song of this week. And make sure that song has more than 100 likes. ", "web": "https://streetvoice.com/"}
+{"web_name": "street_voice", "id": "street_voice--0", "ques":"", "web": "https://streetvoice.com/"}
 ```
-![!\[alt text\](results/20250320_04_38_17/taskstreet_voice--0/screenshot2.png)](results/20250320_13_29_16/taskstreet_voice--0/screenshot3.png)
+
+![alt text](<results/找歌 - task3/taskstreet_voice--0/screenshot3.png>)
 
 **Example summary:**
-![alt text](image-5.png)
-### Results: Successfully searched for the top song of this week. But occasionally failed to enter the weekly ranking, only stay in the overall ranking.
-
+![alt text](image-28.png)
 ## Citation
 Original paper of Webvoyager:
 ```
