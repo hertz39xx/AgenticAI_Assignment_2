@@ -1,0 +1,145 @@
+[
+  {
+    "role": "system",
+    "content": "Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element.\nCarefully analyze the visual information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions:\n1. Click a Web Element.\n2. Delete existing content in a textbox and then type content. \n3. Scroll up or down. Multiple scrolls are allowed to browse the webpage. Pay attention!! The default scroll is the whole window. If the scroll widget is located in a certain area of the webpage, then you have to specify a Web Element in that area. I would hover the mouse there and then scroll.\n4. Wait. Typically used to wait for unfinished webpage processes, with a duration of 5 seconds.\n5. Go back, returning to the previous webpage.\n6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.\n7. Answer. This action should only be chosen when all questions in the task have been solved.\n8. Summary. This action should only be chosen after the ANSWER has been provided and the user has given online comments related to it.\n\nCorrespondingly, Action should STRICTLY follow the format:\n- Click [Numerical_Label]\n- Type [Numerical_Label]; [Content]\n- Scroll [Numerical_Label or WINDOW]; [up or down]\n- Wait\n- GoBack\n- Google\n- ANSWER; [only the Direct answer, DONOT include other information]|[Additional explanation or context]\n- SUMMARY; [Major opinions]|[Positive feedback]|[Negative feedback]\n\nKey Guidelines You MUST follow:\n* Action guidelines *\n1) To input text, NO need to click textbox first, directly type content. After typing, the system automatically hits `ENTER` key. Sometimes you should click the search button to apply search filters. Try to use simple language when searching.  \n2) You must Distinguish between textbox and search button, don't type content into the button! If no textbox is found, you may need to click the search button first before the textbox is displayed. \n3) Execute only one action per iteration. \n4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.\n5) When a complex Task involves multiple questions or steps, select \"ANSWER\" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. \n6) When you get the ANSWER, your next step must be SUMMARY. \n- IMPORTANT: You can ONLY use the key terms in the ANSWER for the SUMMARY search.\n- IMPORTANT: You must write SUMMMARY in Taiwanese Traditional Chinese \u53f0\u7063\u7e41\u9ad4\u4e2d\u6587. \u6ce8\u610f\uff1a\u4f60\u5fc5\u9808\u7528\u53f0\u7063\u7e41\u9ad4\u4e2d\u6587\u64b0\u5beb\u6458\u8981\u7684\u5167\u5bb9\u3002\n- You must collect at least TWO DIFFERENT sources of user comments before summarizing.\n- You will jump to new web which content lots of posts. You need to do the search with key terms in the ANSWER first.\n7) When your are doing summary, please collected at least 2 contents then summary them.\n8) Pleae follow the planner's plan to do the task. Step by step.\n Web Browsing Guidelines *\n1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.\n2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.\n3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.\n4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.\n5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.\n6) When you've stay in the same page and interact with the same element for two continuous iterations, you should consider to change to other possible action.\n* Reply guidelines *\n1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.\n2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.\n3) When the ANSWER of the task has appeared, the user will provide online user comments related to it. Your task is to generate a structured and concise summary of the key points mentioned in the comments, highlighting the most frequently mentioned opinions.\n\nYour reply should strictly follow the format:\nThought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}\nAction: {One Action format you choose}\n\nThen the User will provide:\nObservation: {A labeled screenshot Given by User}\nReviewer_thought: {[Optional]Your original_reply and the judgement from reviewer base on your original_reply}\n"
+  },
+  {
+    "role": "user",
+    "content": "\u9019\u662f\u6839\u64da\u4efb\u52d9\u63cf\u8ff0\u7522\u751f\u7684\u898f\u5283\u6b65\u9a5f\uff1a\nStep 1: \u6253\u958b\u4e00\u500b\u641c\u5c0b\u5f15\u64ce\u3002\nStep 2: \u5728\u641c\u5c0b\u6b04\u4e2d\u8f38\u5165 \"\u8a08\u7b97\u6a5f\u7d50\u69cb \u6559\u5e2b \u8ab2\u7a0b\"\u3002\nStep 3: \u9ede\u64ca\u641c\u5c0b\u7d50\u679c\u4e2d\u770b\u8d77\u4f86\u50cf\u5b98\u65b9\u8ab2\u7a0b\u8cc7\u8a0a\u6216\u7cfb\u6240\u7db2\u7ad9\u7684\u9023\u7d50\u3002\nStep 4: \u5728\u8a72\u9801\u9762\u5c0b\u627e\u4eca\u5e74\u5ea6\u7684\u8ab2\u7a0b\u8cc7\u8a0a\uff0c\u4e26\u67e5\u627e\u8a08\u7b97\u6a5f\u7d50\u69cb\u8ab2\u7a0b\u7684\u6388\u8ab2\u6559\u5e2b\u59d3\u540d\u3002\n"
+  },
+  {
+    "role": "system",
+    "content": "\u8acb\u6839\u64da\u524d\u9762\u898f\u5283\u597d\u7684\u6b65\u9a5f\uff0c\u9010\u6b65\u5b8c\u6210\u6bcf\u4e00\u9805\uff0c\u5f9e Step 1 \u958b\u59cb\u3002"
+  },
+  {
+    "role": "user",
+    "content": "Now given a task: \u67e5\u8a62\u4eca\u5e74\u7531\u8ab0\u6559\u6388\u8cc7\u5de5\u7cfb\u7684\u8a08\u7b97\u6a5f\u7d50\u69cb\u8ab2\u7a0b\u3002  Please interact with https://cis.ncu.edu.tw/Course/main/news/announce and get the answer.Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: I need to interact with the webpage to find information about this year's \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" course and its instructor. The page contains various announcements, and it seems like there is a section that may lead to the course details. \n\nAction: Click [5]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The webpage contains various course-related options. The element labeled [5] appears to lead to course queries, which would be relevant for finding information about the \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" course and its instructor. \n\nAction: Click [5]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "You have repeated the same Action as a previous step: `Click [5]`.\nPlease choose a different action."
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: Since I've already clicked on the course query link, I will now scroll to check if the relevant course information is displayed on the page.\n\nAction: Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The webpage contains a detailed list of courses and links, but I need to look for specific course information relevant to \"\u8a08\u7b97\u6a5f\u7d50\u69cb\". The elements related to course queries are visible, particularly the element labeled [24] which seems to focus on the current semester course details. \n\nAction: Click [24]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The course listing provides options for different types of course queries. The option labeled [24] looks like it will give detailed information about the current semester's courses, which likely includes the \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" course and its instructor. I need to access this section to find the specific details I'm looking for.\n\nAction: Click [24]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "You have repeated the same Action as a previous step: `Click [24]`.\nPlease choose a different action."
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: Since I cannot click [24] again, I will scroll down to see if more details about courses are available on the current page.\n\nAction: Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": "You have repeated the same Action as a previous step: `Scroll [WINDOW]; down`.\nPlease choose a different action."
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: I need to explore the information further, so I will attempt to click on [30], which might lead to general course queries that could include the \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" course.\n\nAction: Click [30]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Not Feasible. Clicking [30] is unlikely to directly lead to specific course information or queries related to \"\u8a08\u7b97\u6a5f\u7d50\u69cb.\" It seems to be a generic link for \"Announcements\". I recommend going back and using the search function to find the course directly.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot shows an interface for querying courses at National Central University. The area labeled [11] provides a dropdown menu where I can select a specific course field. I need to select the relevant option for \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" to find the instructor and other details.\n\nAction: Type [11]; \u8a08\u7b97\u6a5f\u7d50\u69cb"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Not Feasible. The element [11] is a select element, not a text input. You cannot type text into it. You should click on it first, then choose the corresponding option.\n"
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The element labeled [11] is a dropdown menu, and I need to interact with it to select the appropriate course area. I will need to click on this menu and then choose \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" if it is available in the list.\n\nAction: Click [11]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Observation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[0]: \"English\";\t[1]: \"Site Map\";\t[2]: \"\u95dc\u65bc\u672c\u7cfb\u7d71\";\t[3]: \"\u4f7f\u7528\u624b\u518a\";\t[4]: \"\u76f8\u95dc\u8cc7\u8a0a\";\t[5]: \"\u8ab2\u7a0b\u67e5\u8a62\";\t[6]: \"\u767b\u5165\u7cfb\u7d71\";\t[7]: \"Home\";\t[8]: \"\u65b0\u9078\u8ab2\u767b\u8a18\u7cfb\u7d71\";\t[9]: \"\u8ab2\u7a0b\u67e5\u8a62\";\t[10]: \"\u67e5\u8a62\u901a\u8b58\u8ab2\u7a0b\";\t[11]: \"--\u8acb\u9078\u64c7-- \u901a\u8b58\u9078\u4fee-\u4eba\u6587\u8207\u601d\u60f3 \u901a\u8b58\u9078\u4fee-\u81ea\u7136\u79d1\u5b78 \u901a\u8b58\u9078\u4fee-\u61c9\u7528\u79d1\u5b78 \u901a\u8b58\u9078\u4fee-\u793e\u6703\u601d\u6f6e\u8207\u73fe\u8c61 \u6838\u5fc3\u5fc5\u4fee-\u4eba\u6587\u8207\u601d\u60f3 \u6838\u5fc3\u5fc5\u4fee-\u81ea\u7136\u79d1\u5b78 \u6838\u5fc3\u5fc5\u4fee-\u61c9\u7528\u79d1\u5b78 \u6838\u5fc3\u5fc5\u4fee-\u793e\u6703\u601d\u6f6e\u8207\u73fe\u8c61\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The dropdown menu labeled [11] allows for course selection. To find the \"\u8a08\u7b97\u6a5f\u7d50\u69cb\" course, I need to click on the dropdown to see the options available. Once opened, I can look for the specific course in the list.\n\nAction: Click [11]"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible.\n"
+  }
+]

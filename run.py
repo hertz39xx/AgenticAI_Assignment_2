@@ -13,11 +13,62 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 from prompts import SYSTEM_PROMPT, SYSTEM_PROMPT_TEXT_ONLY
+from prompts_zh import SYSTEM_PROMPT_ZH, SYSTEM_PROMPT_TEXT_ONLY_ZH
 from reviewer_agent_prompts import REVIEWER_PROMPTS
 from openai import OpenAI
 from utils import get_web_element_rect, encode_image, extract_information, print_message,\
     get_webarena_accessibility_tree, get_pdf_retrieval_ans_from_assistant, clip_message_and_obs, clip_message_and_obs_text_only
+from google import genai
+from google.genai import types
+from dotenv import load_dotenv
+from planner_prompts import PLANNER_AGENT_PROMPT
 
+
+def check_user_intent(origin_input):
+    # 對話確認使用者的需求
+    key = os.getenv('GOOGLE_API_KEY')
+    if key is None:
+        raise ValueError("GOOGLE_API_KEY environment variable not set")
+    gemini_client = genai.Client(api_key=key)
+
+    question_clear = False
+    user_input = origin_input
+    history = []
+    history.append(user_input)
+    while question_clear == False:
+        response = gemini_client.models.generate_content(
+            model="gemini-2.0-flash",
+            config=types.GenerateContentConfig(
+                system_instruction="""
+                你是一個 AI Agent 的意圖判斷器，你需要去判斷使用者的輸入是否具有明確指示，並且指示包含詳細的內容讓Agent可以在設定好的網站上進行搜尋。
+                注意事項：
+                    1. 請使用溫和活潑的語氣做回覆，在Question中加入一些表情符號使得回覆更具親和力。
+                    2. 如果使用者的問題不明確，請給出一個問題讓使用者重新輸入。
+                    3. 注意，絕對不可以詢問使用者要使用哪個網站。
+                    4. 必須一定要直接使用以下格式回復，不得加入其他內容：
+                    Clear: {Yes/No}
+                    Intent: {[Optional] If Yes, please provide the detail intent according to the history input.}
+                    Question: {[Optional] If No, please provide a question to re-ask the user's intent.}
+                    5. 使用者應該要提供：想找什麼、為什麼要找等等各項可能的細節。
+                    6. 使用者詢問的範圍不單只是商品，還可能是歌曲、電影、選課系統等等。
+                """,),
+            contents=f"以下是使用者的歷史輸入: {history}")
+     
+        print("Response from Gemini API:")
+        print(response.text)
+        print("歷史輸入：", history)
+
+        if "Clear: Yes" in response.text:
+            question_clear = True
+            print("User's intent is clear.")
+            print("Intent:", response.text.split("Intent: ")[1].split("\n")[0])
+            break
+        
+        user_input = input('請根據問題輸入：')
+        history.append(user_input)
+        logging.info(f"意圖判斷：不明確，機器人輸出: {response.text} 使用者回答: {user_input}")
+
+    return response.text.split("Intent: ")[1].split("\n")[0]
 
 def setup_logger(folder_path):
     log_file_path = os.path.join(folder_path, 'agent.log')
@@ -123,12 +174,12 @@ def format_msg_text_only(it, init_msg, pdf_obs, warn_obs, ac_tree):
 
 
 def call_gpt4v_api(args, openai_client, messages):
-    # 呼叫GPT API，處理錯誤
+    # 呼叫GPT API
     retry_times = 0
     while True:
         try:
             if not args.text_only:
-                logging.info('Calling gpt4v API...')
+                logging.info('Calling gpt4 API...')
                 openai_response = openai_client.chat.completions.create(
                     model=args.api_model, messages=messages, max_tokens=1000, seed=args.seed
                 )
@@ -142,6 +193,7 @@ def call_gpt4v_api(args, openai_client, messages):
             completion_tokens = openai_response.usage.completion_tokens
 
             logging.info(f'Prompt Tokens: {prompt_tokens}; Completion Tokens: {completion_tokens}')
+            logging.info(f'agent回應: {openai_response.choices[0].message.content}')
 
             gpt_call_error = False
             return prompt_tokens, completion_tokens, gpt_call_error, openai_response
@@ -168,18 +220,28 @@ def call_gpt4v_api(args, openai_client, messages):
             logging.info('Retrying too many times')
             return None, None, True, None
 
-def call_reviewer(args, client, reviewer_messages, max_retries=3, retry_delay=2):
+def call_reviewer(args, gemini_client, observation_text, agent_response, max_retries=3, retry_delay=2):
+    
     retries = 0
     while retries < max_retries:
         try:
             logging.info('Calling reviewer api...')
-            openai_response = client.chat.completions.create(
-                model=args.api_model,
-                messages=reviewer_messages,
-                temperature=args.temperature
+            # openai_response = client.chat.completions.create(
+            #     model=args.api_model,
+            #     messages=reviewer_messages,
+            #     temperature=args.temperature
+            # )
+            query = f"Observation: {observation_text}\nAgent_Response: {agent_response}"
+            response = gemini_client.models.generate_content(
+                model="gemini-2.0-flash",
+                config=types.GenerateContentConfig(
+                    system_instruction=REVIEWER_PROMPTS
+                ),
+                contents=query
             )
-            # logging.info(f'reviewer response: {openai_response.choices[0].message.content}')
-            return openai_response.usage.prompt_tokens, openai_response.usage.completion_tokens, False, openai_response
+            logging.info(f'reviewer回應: {response.text}')
+
+            return 0, 0, False, response.text
         except Exception as e:
             logging.error(f"Error in Reviewer Agent call (Attempt {retries + 1}/{max_retries}): {e}")
             retries += 1
@@ -187,6 +249,20 @@ def call_reviewer(args, client, reviewer_messages, max_retries=3, retry_delay=2)
             
     logging.error("Max retries reached for Reviewer Agent. Skipping this request.")
     return 0, 0, True, None
+
+def run_planner_agent(intent, gemini_client, args):
+
+    response = gemini_client.models.generate_content(
+        model="gemini-2.0-flash",
+        config=types.GenerateContentConfig(
+            system_instruction=PLANNER_AGENT_PROMPT
+        ),
+        contents=f"任務描述：{intent}"
+    )
+
+    plan_text = response.text
+    logging.info(f"Planner 規劃步驟如下：\n{plan_text}")
+    return plan_text
 
 def exec_action_click(info, web_ele, driver_task):
     # 在selenium執行點擊的動作
@@ -272,7 +348,7 @@ def generate_summary(openai_client, search_query, articles):
     ])
 
     prompt = f"""
-    Below are some search results about "{search_query}". Summarize the main opinions, including major themes, positive feedback, and negative feedback.
+    Below are some search results about "{search_query}". Summarize the main opinions in 台灣繁體中文, including major themes, positive feedback, and negative feedback.
 
     {article_text}
 
@@ -340,9 +416,15 @@ def main():
     parser.add_argument("--fix_box_color", action='store_true')
 
     args = parser.parse_args()
+    load_dotenv()
 
     # OpenAI client
     client = OpenAI(api_key=args.api_key)
+
+    key = os.getenv('GOOGLE_API_KEY')
+    if key is None:
+        raise ValueError("GOOGLE_API_KEY environment variable not set")
+    gemini_client = genai.Client(api_key=key)
 
     options = driver_config(args)
 
@@ -360,11 +442,28 @@ def main():
 
 
     for task_id in range(len(tasks)): # 逐一處理每個task
+        action_memory = set() # 加入動作記憶
         task = tasks[task_id]
         task_dir = os.path.join(result_dir, 'task{}'.format(task["id"]))
         os.makedirs(task_dir, exist_ok=True)
         setup_logger(task_dir)
         logging.info(f'########## TASK{task["id"]} ##########')
+
+        intent = check_user_intent(task["ques"])
+        logging.info(f"重新確認使用者意圖為: {intent}")
+        task["ques"] = intent
+
+        # prompt可以參考prompt.py
+        messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
+        obs_prompt = "Observation: please analyze the attached screenshot and give the Thought and Action. "
+
+        if args.text_only:
+            messages = [{'role': 'system', 'content': SYSTEM_PROMPT_TEXT_ONLY}]
+            obs_prompt = "Observation: please analyze the accessibility tree and give the Thought and Action."
+        
+        # 呼叫 Planner Agent 規劃操作
+        plan_steps = run_planner_agent(intent, gemini_client, args)
+        messages.append({'role': 'user', 'content': f"這是根據任務描述產生的規劃步驟：\n{plan_steps}"})
 
         driver_task = webdriver.Chrome(options=options)
 
@@ -393,14 +492,8 @@ def main():
         warn_obs = ""  # Type warning
         pattern = r'Thought:|Action:|Observation:'
 
-        # prompt可以參考prompt.py
-        messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
-        obs_prompt = "Observation: please analyze the attached screenshot and give the Thought and Action. "
-        if args.text_only:
-            messages = [{'role': 'system', 'content': SYSTEM_PROMPT_TEXT_ONLY}]
-            obs_prompt = "Observation: please analyze the accessibility tree and give the Thought and Action."
-
         # 初始prompt
+        messages.append({'role': 'system', 'content': '請根據前面規劃好的步驟，逐步完成每一項，從 Step 1 開始。'})
         init_msg = f"""Now given a task: {task['ques']}  Please interact with https://www.example.com and get the answer. \n"""
         init_msg = init_msg.replace('https://www.example.com', task['web'])
         init_msg = init_msg + obs_prompt
@@ -496,15 +589,14 @@ def main():
                 {'role': 'system', 'content': REVIEWER_PROMPTS},
                 {'role': 'user', 'content': f'observation:{obs_content}\nagent_decision:{gpt_4v_res}'}
             ]
-            logging.info(f'reviewer_msg:{reviewer_msg}')
-            prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_reviewer(args, client, reviewer_msg)
-            reviewer_res = openai_response.choices[0].message.content
-            logging.info(f'reviewer_res: {reviewer_res}')
-            messages.append({'role': 'user', 'content': f'Reviewer_thought:{reviewer_res}'})
+            # logging.info(f'reviewer_msg:{reviewer_msg}')
+            prompt_tokens, completion_tokens, gpt_call_error, response = call_reviewer(args, gemini_client, obs_content, gpt_4v_res)
+            # reviewer_res = openai_response.choices[0].message.content
+            messages.append({'role': 'user', 'content': f'Reviewer_thought:{response}'})
 
             # 用 Reviewer 回應判斷是否要重新生成
-            if "Opinion: Not feasible" in reviewer_res:
-                logging.info("Reviewer determined that the action is not feasible. Please reconsider your Thought and Action.")
+            if "Opinion: Not feasible" in response:
+                logging.info("Reviewer 認為不可行，重新進行決策")
                 prompt_tokens, completion_tokens, gpt_call_error, openai_response = call_gpt4v_api(args, client, messages)
                 accumulate_prompt_token += prompt_tokens
                 accumulate_completion_token += completion_tokens
@@ -524,7 +616,7 @@ def main():
 
 
             # extract action info
-            # 從GPT-4v的回應中，取得Thought, Action，兩個都要有才算完整的回覆
+            # 從GPT的回應中，取得Thought, Action，兩個都要有才算完整的回覆
             try:
                 assert 'Thought:' in gpt_4v_res and 'Action:' in gpt_4v_res
             except AssertionError as e:
@@ -641,7 +733,12 @@ def main():
 
             # bot_thought = re.split(pattern, gpt_4v_res)[1].strip()
             chosen_action = re.split(pattern, gpt_4v_res)[2].strip()
-            # print(chosen_action)
+            if chosen_action in action_memory:
+                logging.warning("發現執行重複的 Action，提示 Agent 重新思考")
+                fail_obs = f"You have repeated the same Action as a previous step: `{chosen_action}`.\nPlease choose a different action."
+                continue  # 跳過這一輪，進入下一次 while
+            else:
+                action_memory.add(chosen_action)
             action_key, info = extract_information(chosen_action)
 
             fail_obs = ""

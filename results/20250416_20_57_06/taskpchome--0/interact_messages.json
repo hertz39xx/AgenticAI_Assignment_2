@@ -1,0 +1,65 @@
+[
+  {
+    "role": "system",
+    "content": "Imagine you are a robot browsing the web, just like humans. Now you need to complete a task. In each iteration, you will receive an Observation that includes a screenshot of a webpage and some texts. This screenshot will feature Numerical Labels placed in the TOP LEFT corner of each Web Element.\nCarefully analyze the visual information to identify the Numerical Label corresponding to the Web Element that requires interaction, then follow the guidelines and choose one of the following actions:\n1. Click a Web Element.\n2. Delete existing content in a textbox and then type content. \n3. Scroll up or down. Multiple scrolls are allowed to browse the webpage. Pay attention!! The default scroll is the whole window. If the scroll widget is located in a certain area of the webpage, then you have to specify a Web Element in that area. I would hover the mouse there and then scroll.\n4. Wait. Typically used to wait for unfinished webpage processes, with a duration of 5 seconds.\n5. Go back, returning to the previous webpage.\n6. Google, directly jump to the Google search page. When you can't find information in some websites, try starting over with Google.\n7. Answer. This action should only be chosen when all questions in the task have been solved.\n8. Summary. This action should only be chosen after the ANSWER has been provided and the user has given online comments related to it.\n\nCorrespondingly, Action should STRICTLY follow the format:\n- Click [Numerical_Label]\n- Type [Numerical_Label]; [Content]\n- Scroll [Numerical_Label or WINDOW]; [up or down]\n- Wait\n- GoBack\n- Google\n- ANSWER; [only the Direct answer, DONOT include other information]|[Additional explanation or context]\n- SUMMARY; [Major opinions]|[Positive feedback]|[Negative feedback]\n\nKey Guidelines You MUST follow:\n* Action guidelines *\n1) To input text, NO need to click textbox first, directly type content. After typing, the system automatically hits `ENTER` key. Sometimes you should click the search button to apply search filters. Try to use simple language when searching.  \n2) You must Distinguish between textbox and search button, don't type content into the button! If no textbox is found, you may need to click the search button first before the textbox is displayed. \n3) Execute only one action per iteration. \n4) STRICTLY Avoid repeating the same action if the webpage remains unchanged. You may have selected the wrong web element or numerical label. Continuous use of the Wait is also NOT allowed.\n5) When a complex Task involves multiple questions or steps, select \"ANSWER\" only at the very end, after addressing all of these questions (steps). Flexibly combine your own abilities with the information in the web page. Double check the formatting requirements in the task when ANSWER. \n6) When you get the ANSWER, your next step must be SUMMARY. \n- IMPORTANT: You can ONLY use the key terms in the ANSWER for the SUMMARY search.\n- IMPORTANT: You must write SUMMMARY in Taiwanese Traditional Chinese \u53f0\u7063\u7e41\u9ad4\u4e2d\u6587. \u6ce8\u610f\uff1a\u4f60\u5fc5\u9808\u7528\u53f0\u7063\u7e41\u9ad4\u4e2d\u6587\u64b0\u5beb\u6458\u8981\u7684\u5167\u5bb9\u3002\n- You must collect at least TWO DIFFERENT sources of user comments before summarizing.\n- You will jump to new web which content lots of posts. You need to do the search with key terms in the ANSWER first.\n7) When your are doing summary, please collected at least 2 contents then summary them. \n Web Browsing Guidelines *\n1) Don't interact with useless web elements like Login, Sign-in, donation that appear in Webpages. Pay attention to Key Web Elements like search textbox and menu.\n2) Vsit video websites like YouTube is allowed BUT you can't play videos. Clicking to download PDF is allowed and will be analyzed by the Assistant API.\n3) Focus on the numerical labels in the TOP LEFT corner of each rectangle (element). Ensure you don't mix them up with other numbers (e.g. Calendar) on the page.\n4) Focus on the date in task, you must look for results that match the date. It may be necessary to find the correct year, month and day at calendar.\n5) Pay attention to the filter and sort functions on the page, which, combined with scroll, can help you solve conditions like 'highest', 'cheapest', 'lowest', 'earliest', etc. Try your best to find the answer that best fits the task.\n6) When you've stay in the same page and interact with the same element for two continuous iterations, you should consider to change to other possible action.\n* Reply guidelines *\n1) There is a reviewer who is going to judge your thought and action for making the feasibility higher, when you receive the response from reviewer, you should re-think your thought and action according to the judgement.\n2) If user providing Reviewer_thought to you, you should re-think your thought and action according to the information in Reviewer_thought.\n3) When the ANSWER of the task has appeared, the user will provide online user comments related to it. Your task is to generate a structured and concise summary of the key points mentioned in the comments, highlighting the most frequently mentioned opinions.\n\nYour reply should strictly follow the format:\nThought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}\nAction: {One Action format you choose}\n\nThen the User will provide:\nObservation: {A labeled screenshot Given by User}\nReviewer_thought: {[Optional]Your original_reply and the judgement from reviewer base on your original_reply}\n"
+  },
+  {
+    "role": "user",
+    "content": "Now given a task: \u6211\u60f3\u627e Irocks \u7684\u6a5f\u68b0\u9375\u76e4  Please interact with https://24h.pchome.com.tw/ and get the answer.Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The task is to find Irocks mechanical keyboards on the PChome website. The current screenshot does not show a search box or related elements for searching products directly. Therefore, I will need to scroll to locate the search functionality or navigate to a section where I can find the search option.\n\nAction: Scroll [WINDOW]; down"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Not Feasible. The current action to scroll down may not lead you to a search functionality, as there is no indication in the observations that this page has a search feature accessible by scrolling. I suggest you use the GoBack action to return to a previous page that might have the search option, or explore any navigation elements that could lead you to where you can search for Irocks mechanical keyboards."
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The current screenshot does not show a search box or any navigation that leads to product searches. Since the elements that are visible are buttons and promotional content, I will need to either go back to a previous page or navigate to a different section to find the search function for Irocks mechanical keyboards.\n\nAction: GoBack"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible. The current observation indicates that there are no available search options on the visible elements, and going back to a previous page may allow the agent to locate the required search function. This way, you can avoid getting stuck in a loop without finding the desired information."
+  },
+  {
+    "role": "user",
+    "content": "Observation: A screenshot and some texts. (Omitted in context.)"
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot shows the homepage of PChome with various buttons and promotional elements. Notably, there is an `<input>` element (label [7]) that appears to be a search box, which is likely the best option to find Irocks mechanical keyboards. I will proceed to type \"Irocks \u6a5f\u68b0\u9375\u76e4\" into this search box.\n\nAction: Type [7]; Irocks \u6a5f\u68b0\u9375\u76e4"
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible."
+  },
+  {
+    "role": "user",
+    "content": [
+      {
+        "type": "text",
+        "text": "Observation: please analyze the attached screenshot and give the Thought and Action. I've provided the tag name of each element and the text it contains (if text exists). Note that <textarea> or <input> may be textbox, but not exactly. Please focus more on the screenshot and then refer to the textual information.\n[0]: <button> \"\u7acb\u5373\u9ad4\u9a57\";\t[1]: <button> \"close button\";\t[2]: <button> \"\";\t[3]: <button> \"\";\t[5]: <button> \"\u5168\u7ad9\", \"search button\";\t[6]: <input> \"\";\t[8]: \"PChome 24h\u8cfc\u7269\";\t[9]: \"\u5168\u90e8\u5206\u985e\";\t[10]: \"\u63a8\u85a6\u6392\u5e8f\";\t[11]: \"\u71b1\u92b7\u5ea6\";\t[12]: \"\u65b0\u4e0a\u67b6\";\t[13]: \"\u50f9\u683c\";\t[16]: <button> \"\u5546\u54c1\u5206\u985e\";\t[17]: <button> \"\u9023\u63a5\u65b9\u5f0f\";\t[18]: <button> \"\u984f\u8272\";\t[19]: <button> \"\u4fdd\u56fa\u7a2e\u985e\";\t[20]: <button> \"\u4fdd\u56fa\u671f\u9650\";\t[21]: <button> \"\u9069\u7528\u65bc\";\t[22]: <button> \"\u4f9b\u96fb\u65b9\u5f0f\";\t[23]: <button> \"\u89f8\u767c\u7d50\u69cb\";\t[24]: <button> \"\u8ef8\u9ad4\";\t[25]: \"\u975c\u8b10\u77f3\u58a8\u7070i-Rocks \u827e\u82ae\u514b \u5f69\u8272LCD\u986f\u793a\u87a2\u5e55\tirocks K85R \u6a5f\u68b0\u5f0f\u9375\u76e4-\u71b1\u63d2\u62d4-RGB\u80cc\u5149-\u77f3\u58a8\u7070(14)$3,990$4,890\";\t[26]: <button> \"\";\t[27]: <button> \"\";\t[28]: \"\u71b1 \u63d2 \u62d4 i-Rocks \u827e\u82ae\u514b irocks K74M \u6a5f\u68b0\u5f0f\u9375\u76e4-\u71b1\u63d2\u62d4Gateron\u8ef8-\u767d\u8272\u767d\u5149(27)$2,690\u9ede\u6211\u518d\u6298\u6263$3,690\";\t[29]: <button> \"\";\t[30]: <button> \"\";\t[31]: \"\u65b0\u8272\u6975\u5149\u85cdi-Rocks \u827e\u82ae\u514b irocks K85R \u6a5f\u68b0\u5f0f\u9375\u76e4-\u71b1\u63d2\u62d4-RGB\u80cc\u5149-\u6975\u5149\u85cd(21)$3,990\u9ede\u6211\u518d\u6298\u6263$4,890\";\t[32]: <button> \"\";\t[33]: <button> \"\";\t[34]: \"\u9a5a\u559c\u518d\u6298i-Rocks \u827e\u82ae\u514b irocks K85R \u6a5f\u68b0\u5f0f\u9375\u76e4-\u71b1\u63d2\u62d4-RGB\u80cc\u5149- \u975c\u97f3\u5976\u8336\u8ef8(33)$4,290\u9ede\u6211\u518d\u6298\u6263$5,190\";\t[35]: <button> \"\";\t[36]: <button> \"\";"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/png;base64,{b64_img}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "assistant",
+    "content": "Thought: The screenshot shows several i-Rocks mechanical keyboards listed along with their prices and features. Since I have the relevant information, I can now proceed to answer by summarizing the keyboard options available.\n\nAction: ANSWER; There are multiple i-Rocks mechanical keyboards available, such as the K85R priced at $3,990, the K74M at $2,690, and the K85R in different colors priced at $3,990 and $4,290.|The options provide varying features like RGB backlighting and hot-swappable switches."
+  },
+  {
+    "role": "user",
+    "content": "Reviewer_thought:Opinion: Feasible"
+  }
+]

@@ -31,3 +31,14 @@ Then the User will provide:
 Observation: {A labeled screenshot Given by User}
 Agent_decision: {The thought from the agent, and The action that agent planning to do}
 """
+
+JUDGE_AGENT_PROMPT = """
+你是一位負責判斷兩位 AI 回覆的評審，根據以下 Observation 與兩位 Agent 回覆，請選擇其中一位作為最適合的 Thought 與 Action。
+
+請依照以下格式輸出：
+Choice: Agent A 或 Agent B
+Reason: （請說明選擇原因）
+Final_Answer:
+Thought: {Your brief thoughts (briefly summarize the info that will help ANSWER)}
+Action: {One Action format you choose}
+"""
